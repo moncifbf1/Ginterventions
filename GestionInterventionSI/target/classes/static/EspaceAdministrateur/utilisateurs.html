@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Espace administrateur</title>
+
+    <!-- Bootstrap -->
+    <link href="../Assets/RespoAssets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../Assets/RespoAssets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="../Assets/RespoAssets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- jVectorMap -->
+    <link href="../Assets/RespoAssets/css/maps/jquery-jvectormap-2.0.3.css" rel="stylesheet"/>
+	<!-- Datatables -->
+	<link href="../Assets/RespoAssets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+	<link href="../Assets/RespoAssets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="../Assets/RespoAssets/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md" ng-app="AdministrationApp" ng-controller="utilisateursCtrl" ng-init="getLoggedUser()">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-bookmark" aria-hidden="true"></i><span> G. Interventions</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile">
+              <div class="profile_pic">
+                <img src="../Assets/RespoAssets/img/user.png" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Bienvenue,</span>
+                <h2 ng-cloak>{{User.lastName}} {{User.firstName}}</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Menu</h3>
+                <ul class="nav side-menu" ng-init="loadMessages()">
+                  <li><a href="index.html"><i class="fa fa-home"></i>Accueil</a></li>
+                  <li><a href="utilisateurs.html"><i class="fa fa-user" aria-hidden="true"></i>Utilisateurs</a></li>
+                  <!-- <li><a><i class="fa fa-line-chart" aria-hidden="true"></i>Statistiques</a></li> -->
+                  <li><a href="messagerie.html"><i class="fa fa-envelope-o" aria-hidden="true"></i>Messagerie<span class="label label-success pull-right" ng-if="messageLength>0" ng-cloak>{{messagesNotif.length}}</span></a></li>
+                  <li><a href="fournisseurs.html"><i class="fa fa-cogs" aria-hidden="true"></i>Materiels</a></li>	
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="../Assets/RespoAssets/img/user.png" alt=""><span ng-cloak>{{User.username}}</span>
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                  	<li>
+                      <a href="javascript:;">
+                        <span>Paramètres</span>
+                      </a>
+                    </li>
+                    <li><a ng-click="logout()"><i class="fa fa-sign-out pull-right"></i>Se déconnecter</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+        
+		<!-- page content -->
+        <div class="right_col" role="main">
+			<center><h1>Gestion des utilisateurs</h1></center><br>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="x_content">    
+				      <form>
+				      	<div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Nom:</label>
+							<input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="UserData.firstName" placeholder="Nom..." ng-cloak>
+	                    </div>
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Prénom:</label>
+	                        <input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="UserData.lastName" placeholder="Prénom..." ng-cloak>
+	                    </div>	
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Mot de passe:</label>
+	                        <input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="UserData.password" placeholder="Mot de passe..." ng-cloak>
+	                    </div>	
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Pseudo:</label>
+	                        <input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="UserData.username" placeholder="Pseudo..." ng-cloak>
+	                    </div>	
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Téléphone:</label>
+	                        <input class="col-md-6 col-sm-6 col-xs-12 form-grou" type="text" ng-model="UserData.telephone" placeholder="Téléphone..." ng-cloak>
+	                    </div>	
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Email:</label>
+	                        <input class="col-md-6 col-sm-6 col-xs-12 form-group" type="email" ng-model="UserData.mail" placeholder="Adresse mail..." ng-cloak>
+	                    </div>	
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Statut:</label>  	
+							<select ng-model="UserData.actived" ng-options="etat.id as etat.val for etat in [{ id: false, val: 'Non actif' }, { id: true, val: 'Actif' }]" ng-cloak></select>
+	                    </div>	
+	                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+	                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Rôle:</label>
+                        	<select ng-model="UserData.roles[0].role" ng-options="role.role as role.role for role in roles" ng-change="onChangeRole(UserData.roles[0].role)" ng-cloak></select>
+	                    </div>	
+	                    	        
+	                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                      		<center>
+                      			<button type="submit" class="btn btn-success btn-lg" ng-click="addUser()"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 4%;"></i>Ajouter</button>
+                      			<button ng-disabled="UserData==null" type="submit" class="btn btn-lg btn-primary" ng-click="updateUser()"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: 4%;"></i>Modifier</button>
+								<button ng-disabled="UserData==null" type="submit" class="btn btn-lg btn-danger" ng-click="deleteUser(UserData.username)"><i class="fa fa-times" aria-hidden="true" style="margin-right: 4%;"></i>Supprimer</button> 
+                      		</center>
+                      	</div>	                      	
+				      </form>
+				      
+				       <!-- ALERTS -->
+	                   <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+		                  	<div class="alert alert-success alert-dismissible fade in" ng-if="alertSuccess" role="alert">
+							   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+							   </button>
+							   <strong ng-cloak>{{alertSuccess}}</strong> 
+							</div>
+					        <div class="alert alert-error alert-dismissible fade in" ng-if="alertError" ng-cloak>
+					        	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+					        	<strong ng-cloak>{{alertError}}</strong> 
+					        </div>
+					   </div>
+				       <!-- /ALERTS -->
+				       <h3>Liste des utilisateurs</h3>
+				       <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">                       		
+                       		<div class="col-md-6 col-sm-4 col-xs-12 form-group">
+			              		<label class="control-label col-md-8 col-sm-4 col-xs-12">Selectionner le type d'utilisateurs à afficher:</label>
+                      			<select ng-model="tableUserType" ng-options="tableUsers.id as tableUsers.val for tableUsers in [{ id: 'Tous', val: 'Tous' }, { id: 'operateurs', val: 'operateurs' }, { id: 'utilisateurs', val: 'utilisateurs' }, { id: 'responsables', val: 'responsables' }, { id: 'administrateurs', val: 'administrateurs' }]" ng-change="onChangeTable(tableUserType)" class="ng-pristine ng-valid ng-touched"><option value="?" selected="selected" label=""></option><option value="0" label="Tous">Tous</option><option value="1" label="operateurs">operateurs</option><option value="2" label="utilisateurs">utilisateurs</option><option value="3" label="responsables">responsables</option><option value="4" label="administrateurs">administrateurs</option></select>
+                       		</div>
+		              		<div class="col-md-6 col-sm-4 col-xs-12 form-group">
+			              		<label class="control-label col-md-5 col-sm-5 col-xs-12">Rechercher un utilisateur:</label>
+			              		<input type="text" ng-model="searchKeyword" class="control-label col-md-4 col-sm-4 col-xs-12">
+			              		<button ng-click="searchUser(searchKeyword)" style="margin-left:1%;">Rechercher</button>
+		              		</div>
+                       </div>
+				       <table id="datatable" class="table table-striped jambo_table bulk_action" ng-init="chargerUsers()">
+				        <thead>
+				           <tr>
+				             <th style="font-size: 11px;">NOM</th>
+				             <th style="font-size: 11px;">PRENOM</th>	
+				             <th style="font-size: 11px;">NOM D'UTILISATEUR</th>
+				             <th style="font-size: 11px;">MOT DE PASSE</th>
+				             <th style="font-size: 11px;">TELEPHONE</th>
+				             <th style="font-size: 11px;">DATE CREATION</th>
+				             <th style="font-size: 11px;">STATUT</th>
+				             <th style="font-size: 11px;">ROLE</th>
+				           </tr>
+				         </thead>
+				         <tbody>
+				           <tr ng-repeat="user in Users" ng-click="showData(user)">
+				             <td>{{user.firstName}}</td>
+				             <td>{{user.lastName}}</td>
+				             <td>{{user.username}}</td>
+				             <td>{{user.password}}</td>
+				             <td>{{user.telephone}}</td>
+				             <td>{{user.dateCreation}}</td>
+				             <td>{{user.actived}}</td>
+				             <td>{{user.roles[0].role}}</td>
+				           </tr>            
+				         </tbody>
+				       </table>
+			       </div>
+				</div>
+			</div>
+		</div>
+		<!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gestion des interventions
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="../Assets/RespoAssets/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../Assets/RespoAssets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="../Assets/RespoAssets/js/custom.min.js"></script>
+    
+    <!-- Angular Scripts -->
+    <script src="../angular/angular.min.js"></script>
+    <script src="../angular/angular-ui-router.min.js"></script>
+    
+    <!-- Angular Controllers -->
+    <script src="myApp.js"></script>
+    <script>
+	    $(function(){
+	        $("[data-hide]").on("click", function(){
+	            $("." + $(this).attr("data-hide")).hide();
+	        });
+	    });
+	</script>
+  </body>
+</html>

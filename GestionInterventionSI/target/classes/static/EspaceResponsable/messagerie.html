@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Espace responsable</title>
+
+    <!-- Bootstrap -->
+    <link href="../Assets/RespoAssets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../Assets/RespoAssets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Datatables -->
+    <link href="../Assets/RespoAssets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../Assets/RespoAssets/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md" ng-app="ResponsableApp" ng-controller="MessagerieCtrl" ng-init="getLoggedUser()">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-bookmark" aria-hidden="true"></i><span> G. Interventions</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile">
+              <div class="profile_pic">
+                <img src="../Assets/RespoAssets/img/user.png" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Bienvenue,</span>
+                <h2 ng-cloak>{{User.lastName}} {{User.firstName}}</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Menu</h3>
+                <ul class="nav side-menu" ng-init="loadMessages()">
+                  <li><a href="index.html"><i class="fa fa-home"></i>Accueil</a></li>
+                  <li><a href="interventions.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Interventions</a></li>
+                  <!-- <li><a href="statistiques.html"><i class="fa fa-line-chart" aria-hidden="true"></i>Statistiques</a></li> -->
+                  <li><a href="messagerie.html"><i class="fa fa-envelope-o" aria-hidden="true"></i>Messagerie<span class="label label-success pull-right" ng-if="messageLength>0" ng-cloak>{{messagesNotif.length}}</span></a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="../Assets/RespoAssets/img/user.png" alt=""><span ng-cloak>{{User.username}}</span>
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                  	<li>
+                      <a href="javascript:;">
+                        <span>Paramètres</span>
+                      </a>
+                    </li>
+                    <li><a ng-click="logout()"><i class="fa fa-sign-out pull-right"></i>Se déconnecter</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+         	<div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Boîte de réception - G. Interventions</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="row">
+                    	<button id="compose" class="btn btn-sm btn-success btn-block" type="button">Nouveau message</button>
+	                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+	                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+	                        <li role="presentation" class="active"><a href="#Recus" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Reçus</a>
+	                        </li>
+	                        <li role="presentation" class=""><a href="#Envoyes" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Envoyés</a>
+	                        </li>
+	                        <li role="presentation" class=""><a href="#NonLus" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Non Lus</a>
+                       		</li>
+	                      </ul>
+	                    <div id="myTabContent" class="tab-content">
+                        	<div role="tabpanel" class="tab-pane fade active in" id="Recus" aria-labelledby="home-tab">
+		                      <div class="col-sm-3 mail_list_column" ng-init="chargerMessages()" style="overflow-y:auto; height: 260px;">
+		                        <a ng-repeat="message in Messages | orderBy:'-id_message'" ng-click="showData(message.id_message); changeState(message)">
+		                          <div class="mail_list">
+		                            <div class="left">
+		                              <i class="fa fa-circle" aria-hidden="true" ng-if="message.etat_message == 0" ng-cloak></i>
+		                            </div>
+		                            <div class="right">
+		                              <h3 ng-cloak>DE: {{message.codeEmetteur}}<small ng-cloak>{{message.heure_message}}</small></h3>
+		                              <p ng-cloak>{{message.text_message | cut:true:50:' ...'}}</p>
+		                            </div>
+		                          </div>
+		                        </a>
+		                      </div>
+                      		</div>
+                      		<div role="tabpanel" class="tab-pane fade" id="Envoyes" aria-labelledby="profile-tab">
+                      			<div class="col-sm-3 mail_list_column" ng-init="chargerMessages()" style="overflow-y:auto; height: 260px;">
+			                        <a ng-repeat="message in MessagesEnv | orderBy:'-id_message'" ng-click="showData(message.id_message); changeState(message)">
+			                          <div class="mail_list">
+			                            <div class="left">
+			                            </div>
+			                            <div class="right">
+			                              <h3 ng-cloak>À: {{message.codeDestinataire}}<small ng-cloak>{{message.heure_message}}</small></h3>
+			                              <p ng-cloak>{{message.text_message | cut:true:50:' ...'}}</p>
+			                            </div>
+			                          </div>
+			                        </a>
+			                      </div>
+                      		</div>
+                      		<div role="tabpanel" class="tab-pane fade" id="NonLus" aria-labelledby="profile-tab">
+                      			<div class="col-sm-3 mail_list_column" ng-init="chargerMessages()" style="overflow-y:auto; height: 260px;">
+			                        <a ng-repeat="message in MessagesWithState | orderBy:'-id_message'" ng-click="showData(message.id_message); changeState(message)">
+			                          <div class="mail_list">
+			                            <div class="left">
+			                              <i class="fa fa-circle" aria-hidden="true" ng-if="message.etat_message == 0" ng-cloak></i>
+			                            </div>
+			                            <div class="right">
+			                              <h3 ng-cloak>DE: {{message.codeEmetteur}}<small ng-cloak>{{message.heure_message}}</small></h3>
+			                              <p ng-cloak>{{message.text_message | cut:true:50:' ...'}}</p>
+			                            </div>
+			                          </div>
+			                        </a>
+			                      </div>
+                      		</div>
+                      <!-- /MAIL LIST -->
+
+                      <!-- CONTENT MAIL -->
+                      <div class="col-sm-9 mail_view">
+                        <div class="inbox-body" ng-show="messageData!=null">
+                          <div class="mail_heading row">
+                            <div class="col-md-8">
+                              <div class="btn-group" ng-cloak>
+                                <button id="compose" class="btn btn-sm btn-primary" type="button" ng-click="repFct(messageData.codeEmetteur)"><i class="fa fa-reply" ></i> Répondre</button>
+                              </div>
+                            </div>
+                            <div class="col-md-4 text-right">
+                              <p class="date label label-primary" style="font-size:100%;" ng-cloak>Le: {{messageData.date_message}} | à: {{messageData.heure_message}} </p>
+                            </div>
+                            <div class="col-md-12" ng-cloak>
+                              <h4 ng-cloak>Objet: {{messageData.objet_message}}</h4>
+                            </div>
+                          </div>
+                          <div class="sender-info" ng-cloak>
+                            <div class="row" ng-cloak>
+                              <div class="col-md-12" ng-cloak>
+                                <strong ng-cloak>De: {{messageData.codeEmetteur}}</strong>
+ 								| pour:
+                                <strong>moi</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="view-mail">
+                            <p ng-cloak>{{messageData.text_message}}</p>
+                          </div>
+                        </div>
+                        
+                        <div class="inbox-body" ng-show="messageData==null">
+                          <div class="bs-example" data-example-id="simple-jumbotron">
+		                    <div class="jumbotron">
+		                      <center>
+		                      	<h1><i class="fa fa-envelope-o" aria-hidden="true"></i></h1>
+		                      	<p>Choisissez un message à lire...</p>
+		                      </center>
+		                    </div>
+		                  </div>
+                        </div>
+                      </div>
+                      <!-- /CONTENT MAIL -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!-- /page content -->
+        
+		<!-- compose -->
+	    <div class="compose col-md-12 col-xs-12">
+	      <div class="compose-header">
+	        Nouveau message
+	        <button type="button" class="close compose-close">
+	          <span>×</span>
+	        </button>
+	      </div>
+	
+	      <div class="compose-body">
+	        <div class="alert alert-success" role="alert" ng-if="alertSuccess" ng-cloak>
+	        	<span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+	        	{{alertSuccess}}
+	        </div>
+	        <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+	          <div class="col-md-7 col-sm-6 col-xs-12">
+				<label class="col-md-3 col-sm-3 col-xs-12" style="margin-top: 0.5%;">Object:</label>
+  				<input type="text" class="col-md-8 col-sm-8 col-xs-12" ng-model="message.objet_message" style="height:25px;" placeholder="Object de votre message..." required>
+			  </div>
+	          <div class="col-md-5 col-sm-6 col-xs-12" ng-init="chargerUsers()">
+				<label class="col-md-6 col-sm-6 col-xs-12" style="margin-top: 0.5%;">Destinataire:</label>
+  				<select ng-model="codeDest"  ng-options="user.username as user.username for user in Users" class="col-md-6 col-sm-6 col-xs-12" style="height:25px; vertical-align: top;" ng-cloak></select>
+			  </div>
+	        </div>
+			
+
+	        <textarea ng-model="message.text_message" class="editor-wrapper" style="width:100%; height:100%;" placeholder="Votre message..."></textarea>
+
+	      </div>
+	
+	      <div class="compose-footer">
+	        <center><button id="send" class="btn btn-lg btn-success" type="button" ng-click="envoyerMessage()">Envoyer</button></center>
+	      </div>
+	    </div>
+	    <!-- /compose -->
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gestion des interventions
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+    
+    <!-- jQuery -->
+    <script src="../Assets/RespoAssets/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../Assets/RespoAssets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="../Assets/RespoAssets/js/custom.min.js"></script>
+    
+	
+    <!-- Angular Scripts -->
+    <script src="../angular/angular.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-morris-chart/1.2.0/angular-morris-chart.min.js"></script>
+    
+    
+    <!-- Angular Controllers -->
+    <script src="myApp.js"></script>
+    
+	<!-- bootstrap-wysiwyg -->
+    <script src="../Assets/RespoAssets/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+    <script src="../Assets/RespoAssets/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
+    <script src="../Assets/RespoAssets/vendors/google-code-prettify/src/prettify.js"></script>
+    
+    <!-- compose -->
+    <script>
+      $('#compose, .compose-close').click(function(){
+        $('.compose').slideToggle();
+      });
+    </script>>
+    <!-- /compose -->
+  </body>
+</html>

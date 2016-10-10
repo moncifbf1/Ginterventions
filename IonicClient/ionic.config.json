@@ -1,0 +1,15 @@
+{
+  "name": "MyCustomerAppClient",
+  "app_id": "",
+
+  "proxies": [
+	  {
+	  	"path":"/backendapi",
+	  	"proxyUrl":"http://localhost:8080"
+	  },
+	  {
+	  	"path":"/webapi",
+	  	"proxyUrl":"http://localhost/api/v1"
+	  }
+  ]
+}

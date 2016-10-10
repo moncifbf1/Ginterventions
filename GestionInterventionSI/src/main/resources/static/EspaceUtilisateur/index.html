@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Espace utilisateur</title>
+
+	<link rel="stylesheet" href="../css/form-basic.css">
+</head>
+
+
+<body ng-app="UtilisateurApp" ng-controller="UtilisateurApp" ng-init="getLoggedUser()">
+    <div class="main-content">
+    	
+        <form class="form-basic" name="addInterventionForm">
+			<center><button ng-click="deconnexion()" style="margin-top: 0px;margin-bottom: 5%;">Deconnexion</button></center>
+            <div class="form-title-row">
+                <h1>Espace Utilisateur simple: <br/>Demande d'intervention</h1>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <span>Titre de l'intervention</span>
+                    <input type="text" ng-model="Intervention.titre" name="name">
+                </label>
+            </div>
+            
+			<div class="form-row" ng-init="chargerFournisseurs()">
+				<label>
+                    <span>Matériel</span>
+                    <input type="hidden" ng-model="nomFournisseur">
+					<select ng-model="Intervention.fournisseur" ng-options="f.id_fournisseur as f.nom_fournisseur for f in Fournisseurs" ng-change="onChangeFournisseur(Intervention.fournisseur)" ng-cloak></select>
+                </label>
+			</div>
+			
+			<div class="form-row" ng-init="chargerModels()">
+				<label>
+                    <span>Models</span>
+                    <select ng-model="Intervention.model" ng-options="m.id_model as m.nom_model for m in Models" ng-cloak></select>
+                </label>
+			</div>
+			
+            <div class="form-row">
+                <label>
+                    <span>Commentaire</span>
+                    <textarea  ng-model="Intervention.comment" name="textarea"></textarea>
+                </label>
+            </div>
+
+<!--             <div class="form-row">
+                <label>
+                    <span>Dropdown</span>
+                    <select name="dropdown">
+                        <option>Option One</option>
+                        <option>Option Two</option>
+                        <option>Option Three</option>
+                        <option>Option Four</option>
+                    </select>
+                </label>
+            </div>
+
+            
+
+            <div class="form-row">
+                <label>
+                    <span>Checkbox</span>
+                    <input type="checkbox" name="checkbox" checked>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label><span>Radio</span></label>
+                <div class="form-radio-buttons">
+
+                    <div>
+                        <label>
+                            <input type="radio" name="radio">
+                            <span>Radio option 1</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            <input type="radio" name="radio">
+                            <span>Radio option 2</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            <input type="radio" name="radio">
+                            <span>Radio option 3</span>
+                        </label>
+                    </div>
+
+                </div>
+            </div> -->
+
+            <div class="form-row">
+                <button type="submit" ng-click="addIntervention()">Envoyer</button>
+            </div>
+        </form>
+    </div>
+    
+	<script src="../angular/angular.min.js"></script>
+	<script src="myApp.js"></script>
+</body>
+</html>

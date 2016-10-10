@@ -1,0 +1,39 @@
+<ion-view view-title="Fil d'actualité" ng-init="getLog()">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button></ion-nav-back-button>
+    <ion-nav-buttons side="left">
+     <!-- Toggle right side menu -->
+     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="padding" ng-controller="HomeCtrl">
+    <center><p style="color: rgba(0, 0, 0, 0.54); font-weight: bold;">Les dernières actions effectuées par les différents 
+    <span style="color:#c1ba9c;">opérateurs</span> et <span style="color:#A3C9A8;">résponsables.</span></p></center>
+    <section id="cd-timeline" class="cd-container">
+      <div ng-repeat="activity in timeline | orderBy:'-id_log'" ng-show="$index<8">
+        <div class="cd-timeline-block">
+          <div class="cd-timeline-icon royal2" ng-if="activity.userType=='RE'">
+            <i class="ion-ios-star timelineIcon"></i>
+          </div>
+          <div class="cd-timeline-icon royal1" ng-if="activity.userType=='OP' ">
+            <i class="ion-person timelineIcon"></i>
+          </div>
+          <!-- cd-timeline-img -->
+          <div class="cd-timeline-content royal2" ng-if="activity.userType=='RE'">
+            <h5 class="marginBottom0 marginTop0">{{activity.date}} | {{activity.heure}}</h5>
+            <p class="marginTop5 cd-author">Action du résponsable: {{activity.userCode}}</p>
+            <hr/>
+            <p class="timelineText">{{activity.action}}</p>
+          </div>
+
+          <div class="cd-timeline-content royal1" style="color: #69A297;" ng-if="activity.userType=='OP' ">
+            <h5 class="marginBottom0 marginTop0">{{activity.date}} | {{activity.heure}}</h5>
+            <p class="marginTop5 cd-author">Action de l'opérateur: {{activity.userCode}}</p>
+            <hr/>
+            <p class="timelineText">{{activity.action}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ion-content>
+</ion-view>

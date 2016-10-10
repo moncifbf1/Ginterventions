@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Espace operateur</title>
+
+    <!-- Bootstrap -->
+    <link href="../Assets/RespoAssets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../Assets/RespoAssets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Datatables -->
+    <link href="../Assets/RespoAssets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../Assets/RespoAssets/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md" ng-app="ResponsableApp" ng-controller="InterventionsCtrl" ng-init="getLoggedUser()">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-bookmark" aria-hidden="true"></i><span> G. Interventions</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile">
+              <div class="profile_pic">
+                <img src="../Assets/RespoAssets/img/user.png" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Bienvenue,</span>
+                <h2 ng-cloak>{{User.lastName}} {{User.firstName}}</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Menu</h3>
+                <ul class="nav side-menu" ng-init="loadMessages()">
+                  <li><a href="index.html"><i class="fa fa-home"></i>Accueil</a></li>
+                  <li><a href="interventions.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Interventions</a></li>
+                  <!-- <li><a><i class="fa fa-line-chart" aria-hidden="true"></i>Statistiques</a></li> -->
+                  <li><a href="messagerie.html"><i class="fa fa-envelope-o" aria-hidden="true"></i>Messagerie<span class="label label-success pull-right" ng-if="messageLength>0" ng-cloak>{{messagesNotif.length}}</span></a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="../Assets/RespoAssets/img/user.png" alt=""><span ng-cloak>{{User.username}}</span>
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                  	<li>
+                      <a href="javascript:;">
+                        <span>Paramètres</span>
+                      </a>
+                    </li>
+                    <li><a ng-click="logout()"><i class="fa fa-sign-out pull-right"></i>Se déconnecter</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main" ng-init="chargerInterventions()">
+         	<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Liste des interventions</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+              		
+                  <form class="form-horizontal form-label-left input_mask">
+
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Titre:</label>
+                        <input class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback-left" type="text" ng-model="Intervention.titre_intervention" placeholder="Titre..." disabled ng-cloak>
+                      </div>
+
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Commentaire:</label>
+                        <input class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback-left" type="text" ng-model="Intervention.commentIntervention" placeholder="Commentaire..." disabled ng-cloak>
+                      </div>
+
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Code clôture:</label>
+                      	<select ng-if="Intervention.etat_intervention != 2" ng-model="Intervention.niveau_intervention" ng-options="niveau.id as niveau.val for niveau in [{ id: 0, val: 'Non défini' }, { id: 1, val: 'Résolution impossible' }, { id: 2, val: 'Intervention abandonnée' }, { id: 3, val: 'Résolue par opérateur' }, { id: 4, val: 'Résolue par fournisseur' }, { id: 5, val: 'Hors périmètre' }, { id: 6, val: 'Dossier en doublon' }]" ng-change="onChangeSearchNiveau(searchNiveau)" ng-cloak></select>
+                      	<select ng-if="Intervention.etat_intervention == 2" ng-model="Intervention.niveau_intervention" ng-options="niveau.id as niveau.val for niveau in [{ id: 0, val: 'Non défini' }, { id: 1, val: 'Résolution impossible' }, { id: 2, val: 'Intervention abandonnée' }, { id: 3, val: 'Résolue par opérateur' }, { id: 4, val: 'Résolue par fournisseur' }, { id: 5, val: 'Hors périmètre' }, { id: 6, val: 'Dossier en doublon' }]" ng-change="onChangeSearchNiveau(searchNiveau)" ng-cloak disabled></select>
+                      </div>
+
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Etat:</label>
+                      	<h4 ng-if="Intervention.etat_intervention == 0" class="label label-danger" ng-cloak>En attente</h4>
+                        <h4 ng-if="Intervention.etat_intervention == 1" class="label label-danger" ng-cloak>En cours</h4>
+                        <h4 ng-if="Intervention.etat_intervention == 2" class="label label-danger" ng-cloak>Terminée</h4>
+                      </div>
+                      
+					  <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+						  	<label class="col-md-4 col-sm-4 col-xs-12">Date de demande:</label>
+	                        <input type="text" class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback-left" value="{{Intervention.date_demande | date :  'yyyy-MM-dd'}}" disabled ng-cloak>
+					  </div>
+                      
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                    		<label class="col-md-4 col-sm-4 col-xs-12">Date d'intervention:</label>
+                        	<input type="text" class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback-left" value="{{Intervention.date_intervention | date :  'yyyy-MM-dd'}}" disabled ng-cloak>
+                      </div>
+                      
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback" ng-init="chargerUtilisateurs()">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Utilisateur:</label>
+                        <h4 class="label label-primary" ng-cloak>{{Intervention.utilisateur.firstName}} {{Intervention.utilisateur.lastName}}</h4>
+                      </div>
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Model:</label>
+                      	<input type="hidden" ng-model="Intervention.idModel">
+                        <input type="text" class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback-left" ng-model="Intervention.nomModel" value="{{Intervention.nomModel}}" disabled ng-cloak>
+                      </div>
+                      <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                      	<label class="col-md-4 col-sm-4 col-xs-12">Remarque:</label>
+                        <textarea ng-if="Intervention.etat_intervention != 2" class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback-left" rows="3" ng-model="Intervention.observation_intervention" ng-cloak></textarea>
+                        <textarea ng-if="Intervention.etat_intervention == 2" class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback-left" rows="3" ng-model="Intervention.observation_intervention" ng-cloak disabled></textarea>
+                      </div>
+                      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback" ng-show="Intervention.niveau_intervention==4 || Intervention.etat_intervention!=2" ng-cloak>
+		                      <label class="col-md-4 col-sm-4 col-xs-12">Contacter fournisseur?</label>
+						      <input type="checkbox" ng-model="ShowContact" ng-change="ShowHide()" /> 
+					  </div>
+					  <div ng-show="IsVisible" class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+				      		<div class="x_title">
+			                    <h2>Envoi de mail</h2>
+			                    <div class="clearfix"></div>
+			                </div>
+			                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+			                	<label class="col-md-4 col-sm-4 col-xs-12">Mail fournisseur:</label>
+				            	<input type="text" ng-model="Intervention.mailFournisseur"/>
+			                </div>
+			                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+			                	<label class="col-md-4 col-sm-4 col-xs-12">Sujet mail:</label>
+				            	<input type="text" ng-model="Intervention.sujetmail"/>
+			                </div>
+				            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+					            <label class="col-md-4 col-sm-4 col-xs-12">Contenu mail:</label>
+					            <textarea ng-model="Intervention.contenuMail" id="message" required="required" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100"></textarea>
+				            </div>
+				            <center>
+				            	<button type="submit" class="btn btn-lg btn-success" ng-click="envoyerMail()"><i class="fa fa-mail-forward" aria-hidden="true" style="margin-right: 4%;"></i>Envoyer</button>
+				            </center>
+				            <hr>
+				      </div>
+					  <!-- ALERTS -->
+	                  <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+		                  	<div class="alert alert-success alert-dismissible fade in" ng-if="alertSuccess" role="alert">
+							   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+							   </button>
+							   <strong ng-cloak>{{alertSuccess}}</strong> 
+							</div>
+					        <div class="alert alert-error alert-dismissible fade in" ng-if="alertError" ng-cloak>
+					        	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+					        	<strong ng-cloak>{{alertError}}</strong> 
+					        </div>
+					  </div>
+				      <!-- /ALERTS -->
+                      <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                      		<center>
+                      			<button type="submit" ng-disabled="Intervention.etat_intervention == 1 || Intervention.etat_intervention == 2 || Intervention.etat_intervention == null" class="btn btn-lg btn-success" ng-click="intervenir()"><i class="fa fa-play" aria-hidden="true" style="margin-right: 4%;"></i>Intervenir</button>
+								<button type="submit" ng-disabled="Intervention.etat_intervention == 2 || Intervention.etat_intervention == null" class="btn btn-lg btn-danger" ng-click="finir()"><i class="fa fa-stop" aria-hidden="true" style="margin-right: 4%;"></i>Cloturer</button> 
+								<!-- <button type="submit" ng-disabled="Intervention.niveau_intervention == 4 || Intervention.etat_intervention == 2 || Intervention.etat_intervention == null" class="btn btn-lg btn-warning" ng-click="passerNiveau()"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 4%;"></i>Niveau suivant</button>  -->
+                      		</center>
+                      </div>	                        
+                    </form>
+                    
+				  <button class="btn btn-link" ng-click="exportToExcel('#datatable')">
+				        <span class="glyphicon glyphicon-share"></span> Exporter en format Excel
+				  </button>
+                    <table class="table table-striped jambo_table bulk_action" >
+                      <thead>
+                        <tr class="headings">
+                          <th>Titre</th>
+                          <th>Model</th>
+                          <th>Fournisseur</th>
+                          <th>Code clôture</th>
+                          <th>Date demande</th>
+                          <th>Date intervention</th>
+                          <th>Utilisateur</th>
+                          <th>Observation</th>
+                          <th>Etat</th>
+                        </tr>
+                      </thead>
+                      <tbody id="datatable">
+                        <!-- | filter:searchString -->
+                        <tr ng-repeat="inter in Interventions | orderBy:'-id_intervention' " ng-click="showData(inter)">
+                          <td ng-cloak>{{inter.titre_intervention}}</td>
+                          <td ng-cloak>{{inter.interveModel}}</td>
+	                      <td ng-cloak>{{inter.intervFournisseur}}</td>
+	                      <td ng-if="inter.niveau_intervention == 0" ng-cloak>Non défini</td>
+                          <td ng-if="inter.niveau_intervention == 1" ng-cloak>Résolution impossible</td>
+	                      <td ng-if="inter.niveau_intervention == 2" ng-cloak>Intervention abandonnée</td>
+                          <td ng-if="inter.niveau_intervention == 3" ng-cloak>Résolu par opérateur</td>
+                          <td ng-if="inter.niveau_intervention == 4" ng-cloak>Résolu par fournisseur</td> 
+                          <td ng-if="inter.niveau_intervention == 5" ng-cloak>Hors périmètre</td>
+                          <td ng-if="inter.niveau_intervention == 6" ng-cloak>Dossier abandonné</td>
+                          <td ng-cloak>{{inter.date_demande | date :  'yyyy-MM-dd'}}</td>
+                          <td ng-cloak>{{inter.date_intervention | date :  'yyyy-MM-dd'}}</td>
+                          <td ng-cloak>{{inter.utilisateur.firstName}} {{inter.utilisateur.lastName}}</td>
+                          <td ng-if="inter.observation_intervention!=null" ng-cloak>{{inter.observation_intervention}}</td>
+                          <td ng-if="inter.observation_intervention==null" ng-cloak>Aucune observation</td>
+                          <td ng-if="inter.etat_intervention == 0" ng-cloak><span class="label label-warning">En attente</span></td>
+                          <td ng-if="inter.etat_intervention == 1" ng-cloak><span class="label label-danger">En cours</span></td>
+                          <td ng-if="inter.etat_intervention == 2" ng-cloak><span class="label label-success">Terminée</span></td>
+                        </tr>
+                      </tbody>	
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gestion des interventions
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+    
+    <!-- jQuery -->
+    <script src="../Assets/RespoAssets/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../Assets/RespoAssets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="../Assets/RespoAssets/js/custom.min.js"></script>
+    
+	
+    
+    <!-- Angular Scripts -->
+    <script src="../angular/angular.min.js"></script>
+    <script src="../angular/angular-ui-router.min.js"></script>
+    <!-- Angular Controllers -->
+    <script src="myApp.js"></script>
+	
+  </body>
+</html>

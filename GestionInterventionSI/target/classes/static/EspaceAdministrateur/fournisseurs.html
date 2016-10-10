@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Espace administrateur</title>
+
+    <!-- Bootstrap -->
+    <link href="../Assets/RespoAssets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../Assets/RespoAssets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Datatables -->
+    <link href="../Assets/RespoAssets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../Assets/RespoAssets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../Assets/RespoAssets/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md" ng-app="AdministrationApp" ng-controller="FournisseurCtrl" ng-init="getLoggedUser()">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-bookmark" aria-hidden="true"></i><span> G. Interventions</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile">
+              <div class="profile_pic">
+                <img src="../Assets/RespoAssets/img/user.png" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Bienvenue,</span>
+                <h2 ng-cloak>{{User.lastName}} {{User.firstName}}</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Menu</h3>
+                <ul class="nav side-menu" ng-init="loadMessages()">
+                  <li><a href="index.html"><i class="fa fa-home"></i>Accueil</a></li>
+                  <li><a href="utilisateurs.html"><i class="fa fa-user" aria-hidden="true"></i>Utilisateurs</a></li>
+                  <!-- <li><a><i class="fa fa-line-chart" aria-hidden="true"></i>Statistiques</a></li> -->
+                  <li><a href="messagerie.html"><i class="fa fa-envelope-o" aria-hidden="true"></i>Messagerie<span class="label label-success pull-right" ng-if="messageLength>0" ng-cloak>{{messagesNotif.length}}</span></a></li>
+                  <li><a href="fournisseurs.html"><i class="fa fa-cogs" aria-hidden="true"></i>Materiels</a></li>	
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="../Assets/RespoAssets/img/user.png" alt=""><span ng-cloak>{{User.username}}</span>
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                  	<li>
+                      <a href="javascript:;">
+                        <span>Paramètres</span>
+                      </a>
+                    </li>
+                    <li><a ng-click="logout()"><i class="fa fa-sign-out pull-right"></i>Se déconnecter</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+         	<div class="col-md-12">
+                <div class="x_panel">
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#models" id="fournisseur-tab" role="tab" data-toggle="tab" aria-expanded="true">FOURNISSEURS</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#fournisseurs" role="tab" id="model-tab" data-toggle="tab" aria-expanded="false">MODELES</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content" ng-init="chargerFournisseurs()">
+                        <div role="tabpanel" class="tab-pane fade active in" id="models" aria-labelledby="fournisseur-tab" >
+		                	<center><h1>Gestion des fournisseurs</h1></center>
+		                	<form class="form-horizontal form-label-left input_mask">
+								<input type="hidden" ng-model="Fournisseur.id_fournisseur" ng-cloak>
+						      	<div class="col-md-6 col-sm-6 col-xs-12 form-group">
+			                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Nom:</label>
+									<input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="Fournisseur.nom_fournisseur" placeholder="Nom fournisseur..." ng-cloak>
+			                    </div>
+			                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+			                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Mail:</label>
+			                        <input class="col-md-6 col-sm-6 col-xs-12 form-group" type="email" ng-model="Fournisseur.mail_fournisseur" placeholder="Mail fournisseur..." ng-cloak>
+			                    </div>	
+			                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+			                      	<label class="control-label col-md-4 col-sm-4 col-xs-12">Téléphone:</label>
+			                        <input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="Fournisseur.tel_fournisseur" placeholder="Téléphone fournisseur..." ng-cloak>
+			                    </div>	
+			                    <div class="col-md-12 col-sm-12 col-xs-12 form-group" ng-show="modelFourni!=null">
+			                    	<h3 ng-cloak>Liste des modèle du fournisseur {{Fournisseur.nom_fournisseur}}</h3>
+				                    <table id="datatable" class="table table-striped jambo_table bulk_action">
+								        <thead>
+								           <tr>
+								             <th style="font-size: 11px;">MODELE</th>
+								             <th style="font-size: 11px;">DESCRIPTION</th>	
+								           </tr>
+								         </thead>
+								         <tbody>
+								           <tr ng-repeat="modFour in modelFourni">
+								             <td ng-cloak>{{modFour.nom_model}}</td>
+								             <td ng-cloak>{{modFour.description_model}}</td>
+								           </tr>             
+								         </tbody>
+								    </table>
+			                    </div>                  
+			                    <div class="col-md-12 col-sm-12 col-xs-12 form-group" >
+		                      		<center>
+		                      			<button type="submit" class="btn btn-success btn-lg" ng-click="addFournisseur()"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 4%;"></i>Ajouter</button>
+		                      			<button ng-disabled="Fournisseur==null" type="submit" class="btn btn-lg btn-primary" ng-click="updateFournisseur(Fournisseur)"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: 4%;"></i>Modifier</button>
+										<button ng-disabled="Fournisseur==null" type="submit" class="btn btn-lg btn-danger" ng-click="deleteFournisseur(Fournisseur.id_fournisseur)"><i class="fa fa-times" aria-hidden="true" style="margin-right: 4%;"></i>Supprimer</button> 
+		                      		</center>
+		                      	</div>	                      	
+						    </form>
+					
+						      <!-- ALERTS -->
+			                    <!-- <div class="alert alert-success" ng-if="alertSuccess" ng-cloak>
+						        	<button type="button" class="close" data-hide="alert">&times;</button>
+						        	{{alertSuccess}}
+						        </div>
+						        <div class="alert alert-error" ng-if="alertError" ng-cloak>
+						        	<button type="button" class="close" data-hide="alert">&times;</button>
+						        	{{alertError}}
+						        </div> -->
+						        <!-- /ALERTS -->	
+						       <table id="datatable" class="table table-striped jambo_table bulk_action">
+						        <thead>
+						           <tr>
+						             <th style="font-size: 11px;">NOM</th>
+						             <th style="font-size: 11px;">MAIL</th>	
+						             <th style="font-size: 11px;">TELEPHONE</th>
+						           </tr>
+						         </thead>
+						         <tbody>
+						           <tr ng-repeat="four in Fournisseurs" ng-click="showDataFournisseur(four)">
+						             <td ng-cloak>{{four.nom_fournisseur}}</td>
+						             <td ng-cloak>{{four.mail_fournisseur}}</td>
+						             <td ng-cloak>{{four.tel_fournisseur}}</td>
+						           </tr>             
+						         </tbody>
+						       </table>
+						</div>
+						<div role="tabpanel" class="tab-pane fade" id="fournisseurs" aria-labelledby="model-tab" ng-init="chargerModels()">
+                          	<center><h1>Gestion des modèles</h1></center>
+		                	<form>
+		                	
+		                		<div class="col-md-12 col-sm-12 col-xs-12 form-group">
+		                			<input type="hidden" ng-model="model.id_model" ng-cloak>
+		                			<div class="col-md-6 col-sm-6 col-xs-12 form-group">
+		                				<label class="control-label col-md-4 col-sm-4 col-xs-12">Fournisseur:</label>
+		                				<select ng-model="model.fournisseur.id_fournisseur" ng-options="f.id_fournisseur as f.nom_fournisseur for f in Fournisseurs" ng-cloak></select>
+			                    	</div>
+			                    	<div class="col-md-6 col-sm-6 col-xs-12 form-group">
+			                    		<label class="control-label col-md-4 col-sm-4 col-xs-12">Nom modèle:</label>
+			                    		<input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="model.nom_model" placeholder="Nom model..." ng-cloak>
+			                    	</div>
+			                    	<div class="col-md-6 col-sm-6 col-xs-12 form-group">
+			                    		<label class="control-label col-md-4 col-sm-4 col-xs-12">Description modèle:</label>
+			                    		<input class="col-md-6 col-sm-6 col-xs-12 form-group" type="text" ng-model="model.description_model" placeholder="Description model..." ng-cloak>
+			                    	</div>
+			                    </div>
+			                    <div class="col-md-12 col-sm-12 col-xs-12 form-group" >
+		                      		<center>
+		                      			<button type="submit" class="btn btn-success btn-lg" ng-click="addModel()"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 4%;"></i>Ajouter</button>
+		                      			<button ng-disabled="model==null" type="submit" class="btn btn-lg btn-primary" ng-click="updateModel(model)"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: 4%;"></i>Modifier</button>
+										<button ng-disabled="model==null" type="submit" class="btn btn-lg btn-danger" ng-click="deleteModel(model.id_model)"><i class="fa fa-times" aria-hidden="true" style="margin-right: 4%;"></i>Supprimer</button> 
+		                      		</center>
+		                      	</div>	 
+		                	</form>
+		                	<table id="datatable" class="table table-striped jambo_table bulk_action">
+						        <thead>
+						           <tr>
+						             <th style="font-size: 11px;">NOM</th>
+						             <th style="font-size: 11px;">DESCRIPTION</th>	
+						             <th style="font-size: 11px;">FOURNISSEUR</th>
+						           </tr>
+						         </thead>
+						         <tbody>
+						           <tr ng-repeat="mod in Models" ng-click="showDataModel(mod)">
+						             <td ng-cloak>{{mod.nom_model}}</td>
+						             <td ng-cloak>{{mod.description_model | cut:true:50:' ...'}}</td>
+						             <td ng-cloak>{{mod.fournisseur.nom_fournisseur}}</td>
+						           </tr>             
+						         </tbody>
+						       </table>
+                        </div>
+				    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!-- /page content -->
+        
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gestion des interventions
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+    
+    <!-- jQuery -->
+    <script src="../Assets/RespoAssets/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../Assets/RespoAssets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="../Assets/RespoAssets/js/custom.min.js"></script>
+    
+    <!-- Angular Scripts -->
+    <script src="../angular/angular.min.js"></script>
+    
+    <!-- Angular Controllers -->
+    <script src="myApp.js"></script>
+
+  </body>
+</html>

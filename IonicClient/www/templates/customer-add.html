@@ -1,0 +1,34 @@
+<ion-view view-title="Interventions en cours" ng-init="getInterventions()">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button></ion-nav-back-button>
+    <ion-nav-buttons side="left">
+     <!-- Toggle right side menu -->
+     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content ng-controller="InterventionsEncoursCtrl">
+      <ion-refresher
+        pulling-text="Pull to refresh..."
+        on-refresh="doRefresh()">
+      </ion-refresher>     
+        <div class="card" ng-repeat="intervention in interventions">
+          <center><h2 class="bar-positive intervtitle2" style="margin-top: -1px;">{{ intervention.titre_intervention }}</h2></center>
+          <div class="item item-remove-animate">
+            <a style="color:black;font-size:77%;">
+            {{ intervention.commentIntervention }}
+            </a>
+          </div>
+
+          <div class="item tabs tabs-secondary tabs-icon-left" >
+
+            <a class="tab-item" data-ink-color="#336699" data-ink-opacity="0.5" ng-click="showPopUpStop(intervention)" style="font-weight: bold;">
+            <i class="icon ion-stop assertive"></i>Clôture
+            </a>
+
+            <a class="tab-item" data-ink-color="#336699" data-ink-opacity="0.5" ng-click="showPopUpInfos(intervention)" style="font-weight: bold;">
+            <i class="icon ion-information-circled dark"></i>Informations
+            </a>
+          </div>
+      </div>
+  </ion-content>
+</ion-view>
