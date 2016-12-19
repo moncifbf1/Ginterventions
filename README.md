@@ -12,4 +12,10 @@ This computer solution contains Two sides:
 
 This computer solution was created during my internship in the IT service of OCP Jorf Lasfar (01/04/2016 - 31/08/2016) 
 
+## Contact
+
+Let's get in touch: 
+	https://fr.linkedin.com/in/moncif-bounif-632aa5109
+	moncif.bf@gmail.com
+
 
