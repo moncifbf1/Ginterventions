@@ -5,8 +5,10 @@ A Computer solution based on Spring boot, Java JEE & Ionic Framework in a Multi-
 ## Code Example
 
 This computer solution contains Two sides:
-> Front-End: Based on BootStrap, Html5, Css3, JQuery, AngularJS for Web clients, And IONIC Framework for Mobile clients
-> Back-End: Based on Java, JEE, Hibernate, Maven, JPA, Spring Boot, Spring Data, Spring Security.
+* __Front-End__: 
+	* Web clients: Based on BootStrap, Html5, Css3, JQuery, AngularJS for.
+	* Mobile clients: Based on IONIC Framework. 
+* __Back-End__: Based on Java, JEE, Hibernate, Maven, JPA, Spring Boot, Spring Data, Spring Security.
 
 ## Motivation
 
@@ -15,7 +17,7 @@ This computer solution was created during my internship in the IT service of OCP
 ## Contact
 
 Let's get in touch: <br/>
-	* [LinkedIn](https://fr.linkedin.com/in/moncif-bounif-632aa5109)
-	* Mail: moncif.bf@gmail.com
+* [LinkedIn profile](https://fr.linkedin.com/in/moncif-bounif-632aa5109)
+* Mail: moncif.bf@gmail.com
 
 
