@@ -2,7 +2,7 @@
 
 A Computer solution based on Spring boot, Java JEE & Ionic Framework in a Multi-Service networking architecture.
 
-## Code Example
+## Code 
 
 This computer solution contains Two sides:
 * __Front-End__: 
