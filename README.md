@@ -15,7 +15,7 @@ This computer solution was created during my internship in the IT service of OCP
 ## Contact
 
 Let's get in touch: <br/>
-	https://fr.linkedin.com/in/moncif-bounif-632aa5109<br/>
-	moncif.bf@gmail.com
+	*[LinkedIn](https://fr.linkedin.com/in/moncif-bounif-632aa5109)
+	*Mail: moncif.bf@gmail.com
 
 
