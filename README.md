@@ -18,6 +18,7 @@ This computer solution was created during my internship in the IT service of OCP
 
 Let's get in touch: <br/>
 * [LinkedIn profile](https://fr.linkedin.com/in/moncif-bounif-632aa5109)
-* Mail: moncif.bf@gmail.com
+* Personal Mail: moncif.bf@gmail.com*
+* Professional Mail: mbounif@percallgroup.com*
 
 
